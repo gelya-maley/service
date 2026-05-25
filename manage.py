@@ -18,32 +18,5 @@ def main():
     execute_from_command_line(sys.argv)
 
 
-def create_superuser():
-    """Создает суперпользователя при деплое на Render."""
-    if not os.environ.get('RENDER'):
-        return
-
-    print("Running on Render, checking/creating superuser...")
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-    import django
-    django.setup()
-
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-
-    username = "angelina"
-    email = "maley.gelya@mail.ru"
-    password = "fyutkbyf"
-
-    if not User.objects.filter(username=username).exists():
-        User.objects.create_superuser(username=username, email=email, password=password)
-        print(f"Суперпользователь '{username}' успешно создан!")
-    else:
-        print(f"Суперпользователь '{username}' уже существует.")
-
-
 if __name__ == '__main__':
-    # Создаем суперпользователя ТОЛЬКО на Render
-    if os.environ.get('RENDER'):
-        create_superuser()
     main()
