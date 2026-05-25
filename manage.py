@@ -20,7 +20,6 @@ def main():
 
 def create_superuser():
     """Создает суперпользователя при деплое на Render."""
-    # Эта функция запустится только на сервере Render
     if not os.environ.get('RENDER'):
         return
 
@@ -34,7 +33,7 @@ def create_superuser():
 
     username = "angelina"
     email = "maley.gelya@mail.ru"
-    password = "fyutkbyf"  
+    password = "fyutkbyf"
 
     if not User.objects.filter(username=username).exists():
         User.objects.create_superuser(username=username, email=email, password=password)
@@ -43,9 +42,8 @@ def create_superuser():
         print(f"Суперпользователь '{username}' уже существует.")
 
 
-# --- Это очень важно! Скрипт запустится при сборке на Render ---
-if os.environ.get('RENDER'):
-    create_superuser()
-
 if __name__ == '__main__':
+    # Создаем суперпользователя ТОЛЬКО на Render
+    if os.environ.get('RENDER'):
+        create_superuser()
     main()
