@@ -9,17 +9,6 @@ from django.db.models.functions import TruncMonth
 from django.http import JsonResponse
 from django import forms
 
-import os
-if os.environ.get('RENDER'):
-    from django.contrib.auth.models import User
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('anagelina', 'maley.gelya@mail.ru', 'fyutkbyf')
-        print("=" * 50)
-        print("Суперпользователь создан!")
-        print("Логин: admin")
-        print("Пароль: admin123")
-        print("=" * 50)
-
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
