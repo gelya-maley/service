@@ -1,0 +1,9 @@
+{% extends 'core/base.html' %}
+{% block title %}Личный кабинет{% endblock %}
+{% block content %}
+<div class="alert alert-warning">
+    <h4>👤 {{ user.username }}</h4>
+    <p>Вы зарегистрированы, но ваш профиль не привязан ни к клиенту, ни к сотруднику.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">На главную</a>
+</div>
+{% endblock %}

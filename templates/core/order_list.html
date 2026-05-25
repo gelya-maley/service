@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+{% block title %}Список заказов{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📋 Мои заказы</h2>
+    <a href="{% url 'order_create' %}" class="btn btn-success">➕ Новый заказ</a>
+</div>
+
+{% if orders %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>№</th>
+                    <th>Устройство</th>
+                    <th>Проблема</th>
+                    <th>Статус</th>
+                    <th>Дата</th>
+                    <th>Сумма</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.device|default:"Не указано" }}</td>
+                    <td>{{ order.client_problem|truncatechars:40 }}</td>
+                    <td>
+                        {% if order.status == 'pending' %}
+                            <span class="badge bg-warning">⏳ В ожидании</span>
+                        {% elif order.status == 'in_progress' %}
+                            <span class="badge bg-primary">🔧 В работе</span>
+                        {% elif order.status == 'completed' %}
+                            <span class="badge bg-success">✅ Выполнен</span>
+                        {% else %}
+                            <span class="badge bg-danger">❌ Отменен</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ order.order_date|date:"d/m/Y" }}</td>
+                    <td><strong>{{ order.total_cost|floatformat:2 }} руб.</strong></td>
+                    <td>
+                        <a href="{% url 'order_detail_site' order.id %}" class="btn btn-sm btn-info">👁️</a>
+                        <a href="{% url 'order_update' order.id %}" class="btn btn-sm btn-warning">✏️</a>
+                        <a href="{% url 'order_delete' order.id %}" class="btn btn-sm btn-danger">🗑️</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info text-center">
+        <p>У вас пока нет заказов.</p>
+        <a href="{% url 'order_create' %}" class="btn btn-primary">Создать первый заказ</a>
+    </div>
+{% endif %}
+{% endblock %}

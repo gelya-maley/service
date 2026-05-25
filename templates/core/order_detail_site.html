@@ -1,0 +1,67 @@
+{% extends 'core/base.html' %}
+{% block title %}Заказ #{{ order.id }}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h3>Заказ №{{ order.id }}</h3>
+        <div>
+            <a href="{% url 'order_update' order.id %}" class="btn btn-warning btn-sm">✏️ Редактировать</a>
+            <a href="{% url 'order_delete' order.id %}" class="btn btn-danger btn-sm">🗑️ Удалить</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>👤 Клиент:</strong> {{ order.client.full_name }}</p>
+                <p><strong>🛠️ Устройство:</strong> {{ order.device|default:"Не указано" }}</p>
+                <p><strong>📅 Дата заказа:</strong> {{ order.order_date|date:"d/m/Y H:i" }}</p>
+                <p><strong>💰 Сумма:</strong> <span class="h4 text-success">{{ order.total_cost|floatformat:2 }} руб.</span></p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>📊 Статус:</strong> 
+                    {% if order.status == 'pending' %}
+                        <span class="badge bg-warning">⏳ В ожидании</span>
+                    {% elif order.status == 'in_progress' %}
+                        <span class="badge bg-primary">🔧 В работе</span>
+                    {% elif order.status == 'completed' %}
+                        <span class="badge bg-success">✅ Выполнен</span>
+                    {% else %}
+                        <span class="badge bg-danger">❌ Отменен</span>
+                    {% endif %}
+                </p>
+                <p><strong>👨‍🔧 Мастер:</strong> {{ order.master|default:"Не назначен" }}</p>
+                {% if order.completion_date %}
+                    <p><strong>✅ Дата выполнения:</strong> {{ order.completion_date|date:"d/m/Y" }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <h5>📝 Описание проблемы</h5>
+            <div class="card bg-light">
+                <div class="card-body">
+                    {{ order.client_problem|linebreaks }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <h5>🔧 Услуги</h5>
+            <ul class="list-group">
+                {% for item in order.orderservice_set.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ item.service.name }}
+                    <span class="badge bg-primary rounded-pill">{{ item.quantity }} × {{ item.service.price }} руб.</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">Нет добавленных услуг</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'order_list' %}" class="btn btn-secondary">← Назад к списку</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

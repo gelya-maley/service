@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% block title %}Личный кабинет клиента{% endblock %}
+{% block content %}
+<h2>Мои заказы</h2>
+{% for order in orders %}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h5>Заказ #{{ order.id }}</h5>
+            <span class="badge bg-secondary">{{ order.get_status_display }}</span>
+        </div>
+        <p>Устройство: {{ order.device|default:"Не указано" }}</p>
+        <p>Сумма: {{ order.total_cost|floatformat:2 }} руб.</p>
+        <p>Дата: {{ order.order_date|date:"d/m/Y" }}</p>
+        <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-primary">Детали</a>
+    </div>
+</div>
+{% empty %}
+<p>У вас пока нет заказов</p>
+{% endfor %}
+
+<div class="mt-4">
+    <h3>Мои данные</h3>
+    <p>Телефон: {{ user.client_profile.phone }}</p>
+    <p>Адрес: {{ user.client_profile.address }}</p>
+</div>
+{% endblock %}

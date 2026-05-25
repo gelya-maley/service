@@ -1,0 +1,100 @@
+{% extends 'core/base.html' %}
+{% load calendar_extras %}
+{% block title %}Главная - Сервисный центр{% endblock %}
+{% block content %}
+
+<div class="jumbotron text-center mt-5 bg-light p-5 rounded">
+    <h1 class="display-4">🔧 Сервисный центр "ТехноМастер"</h1>
+    <p class="lead">Профессиональный ремонт и настройка компьютерной техники</p>
+    <hr class="my-4">
+    <p>✅ Гарантия качества | ✅ Быстрый ремонт | ✅ Опытные мастера</p>
+</div>
+
+<div class="alert alert-info text-center">
+    🌡 Погода в Минске: {{ weather }}°C | 💵 Курс USD: {{ usd_rate }} руб.
+</div>
+
+<!-- Календарь -->
+<div class="row mt-3">
+    <div class="col-md-6 mx-auto">
+        <div class="card text-center">
+            <div class="card-header bg-secondary text-white">
+                <h5>📅 {% now "F Y" %}</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered" style="margin: 0 auto;">
+                    <thead>
+                        <tr>
+                            <th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% get_calendar as cal_data %}
+                        {% for week in cal_data.calendar %}
+                        <tr>
+                            {% for day in week %}
+                                {% if day == 0 %}
+                                    <td>&nbsp;</td>
+                                {% else %}
+                                    {% if day == cal_data.today %}
+                                        <td style="background-color: #ffcccc; font-weight: bold;">{{ day }}</td>
+                                    {% else %}
+                                        <td>{{ day }}</td>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <small class="text-muted">Красным выделено сегодня</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        🔥 Последняя добавленная услуга
+    </div>
+    <div class="card-body">
+        {% if latest_service %}
+            <h5 class="card-title">{{ latest_service.name }}</h5>
+            <p class="card-text">{{ latest_service.service_type.name }} | Цена: {{ latest_service.price }} руб.</p>
+            <a href="{% url 'service_detail' latest_service.id %}" class="btn btn-primary">Подробнее →</a>
+        {% else %}
+            <p class="card-text">Нет доступных услуг</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>🛠️</h3>
+                <h5>Ремонт</h5>
+                <p>Ноутбуков, ПК, телефонов</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>⚙️</h3>
+                <h5>Настройка</h5>
+                <p>Программного обеспечения</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>💾</h3>
+                <h5>Запчасти</h5>
+                <p>Оригинальные комплектующие</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'core/base.html' %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4>📝 Регистрация нового пользователя</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Логин *</label>
+                        <input type="text" name="username" id="id_username" class="form-control" 
+                               required minlength="3" maxlength="150" pattern="[a-zA-Z0-9_]+"
+                               title="Только буквы, цифры и знак подчеркивания">
+                        <div class="invalid-feedback">Логин обязателен (минимум 3 символа)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_full_name" class="form-label">ФИО *</label>
+                        <input type="text" name="full_name" id="id_full_name" class="form-control" 
+                               required minlength="2" maxlength="150">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">Email *</label>
+                        <input type="email" name="email" id="id_email" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_phone" class="form-label">Телефон *</label>
+                        <input type="tel" name="phone" id="id_phone" class="form-control" 
+                               required pattern="\+375 \(\d{2}\) \d{3}-\d{2}-\d{2}"
+                               placeholder="+375 (29) 123-45-67"
+                               title="Формат: +375 (29) 123-45-67">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_address" class="form-label">Адрес *</label>
+                        <textarea name="address" id="id_address" class="form-control" required minlength="5"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_birth_date" class="form-label">Дата рождения *</label>
+                        <input type="date" name="birth_date" id="id_birth_date" class="form-control" required>
+                        <small class="text-muted">Вы должны быть старше 18 лет</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password1" class="form-label">Пароль *</label>
+                        <input type="password" name="password1" id="id_password1" class="form-control" 
+                               required minlength="8">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password2" class="form-label">Подтверждение пароля *</label>
+                        <input type="password" name="password2" id="id_password2" class="form-control" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+                </form>
+                
+                <p class="mt-3 text-center">
+                    Уже есть аккаунт? <a href="{% url 'login' %}">Войдите</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const password1 = document.getElementById('id_password1').value;
+        const password2 = document.getElementById('id_password2').value;
+        
+        if (password1 !== password2) {
+            alert('Пароли не совпадают!');
+            e.preventDefault();
+            return false;
+        }
+        
+        const birthDate = new Date(document.getElementById('id_birth_date').value);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        
+        if (age < 18) {
+            alert('Вам должно быть 18 лет или старше для регистрации!');
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
+{% endblock %}

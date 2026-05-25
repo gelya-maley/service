@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+{% block title %}Поиск заказов{% endblock %}
+{% block content %}
+<h2>Поиск заказов</h2>
+<form method="get" class="mb-4">
+    <div class="row">
+        <div class="col-md-6">
+            <input type="text" name="q" value="{{ query }}" placeholder="Поиск по имени клиента..." class="form-control">
+        </div>
+        <div class="col-md-3">
+            <select name="sort" class="form-select">
+                <option value="-order_date">По дате (новые)</option>
+                <option value="order_date">По дате (старые)</option>
+                <option value="client__full_name">По имени клиента</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">🔍 Искать</button>
+        </div>
+    </div>
+</form>
+
+{% for order in orders %}
+    <div class="card mt-2">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h5>Заказ #{{ order.id }} | {{ order.client.full_name }}</h5>
+                <span class="badge {% if order.status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
+                    {{ order.get_status_display }}
+                </span>
+            </div>
+            <p>{{ order.client_problem|truncatechars:100 }}</p>
+            <p><strong>{{ order.total_cost|floatformat:2 }} руб.</strong></p>
+            <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-info">Подробнее</a>
+        </div>
+    </div>
+{% empty %}
+    <div class="alert alert-info">Заказов не найдено</div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% block title %}Словарь терминов{% endblock %}
+{% block content %}
+<h2>📖 Словарь терминов и понятий</h2>
+
+<div class="accordion mt-4" id="termsAccordion">
+    {% for term in terms %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading{{ term.id }}">
+            <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" 
+                    data-bs-toggle="collapse" data-bs-target="#collapse{{ term.id }}">
+                <strong>{{ term.term }}</strong>
+                <span class="ms-3 text-muted small">(добавлено: {{ term.created_at|date:"d/m/Y" }})</span>
+            </button>
+        </h2>
+        <div id="collapse{{ term.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" 
+             data-bs-parent="#termsAccordion">
+            <div class="accordion-body">
+                {{ term.definition|linebreaks }}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">Терминов пока нет.</div>
+    {% endfor %}
+</div>
+{% endblock %}

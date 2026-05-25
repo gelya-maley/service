@@ -1,0 +1,77 @@
+{% extends 'core/base.html' %}
+{% block title %}Запчасти{% endblock %}
+{% block content %}
+<h2 class="mb-4">🔧 Запчасти и комплектующие</h2>
+
+<!-- Форма фильтрации -->
+<div class="card mb-4">
+    <div class="card-header bg-secondary text-white">
+        <h5>🔍 Поиск и фильтрация запчастей</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Поиск по названию</label>
+                <input type="text" name="search" class="form-control" value="{{ search }}" placeholder="Например: экран, батарея...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Совместимость с устройством</label>
+                <select name="device" class="form-select">
+                    <option value="">Все устройства</option>
+                    {% for device in device_types %}
+                        <option value="{{ device.id }}" {% if selected_device == device.id|stringformat:"s" %}selected{% endif %}>
+                            {{ device.brand }} {{ device.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Цена от</label>
+                <input type="number" name="min_price" class="form-control" value="{{ min_price }}" placeholder="0">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Цена до</label>
+                <input type="number" name="max_price" class="form-control" value="{{ max_price }}" placeholder="1000">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Сортировка</label>
+                <select name="sort" class="form-select">
+                    <option value="name" {% if sort_by == 'name' %}selected{% endif %}>По названию</option>
+                    <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>По цене (возраст.)</option>
+                    <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>По цене (убыв.)</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">🔍 Найти</button>
+                <a href="{% url 'spare_parts' %}" class="btn btn-secondary">Сбросить</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Результаты -->
+<div class="row">
+    {% for part in spare_parts %}
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ part.name }}</h5>
+                <p class="card-text text-primary h4">{{ part.price }} руб.</p>
+                <p class="card-text"><small class="text-muted">В наличии: {{ part.stock_quantity }} шт.</small></p>
+                {% if part.compatible_devices.all %}
+                    <p class="card-text"><small>Совместим с: 
+                        {% for device in part.compatible_devices.all|slice:":3" %}
+                            {{ device.brand }} {{ device.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </small></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">Запчастей не найдено</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+{% block title %}Добавить отзыв{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <h4>Добавить отзыв</h4>
+    </div>
+    <div class="card-body">
+        {% if success %}
+            <div class="alert alert-success">
+                ✅ Спасибо за отзыв! Он будет опубликован после модерации.
+            </div>
+        {% endif %}
+        
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Ваше имя *</label>
+                <input type="text" name="name" class="form-control" value="{{ form_data.name|default:'' }}" 
+                       required minlength="2" maxlength="100">
+                {% if errors.name %}
+                    <div class="text-danger small mt-1">{{ errors.name }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Оценка *</label>
+                <select name="rating" class="form-select" required>
+                    <option value="">Выберите оценку</option>
+                    <option value="5" {% if form_data.rating == '5' %}selected{% endif %}>★★★★★ (5 - Отлично)</option>
+                    <option value="4" {% if form_data.rating == '4' %}selected{% endif %}>★★★★☆ (4 - Хорошо)</option>
+                    <option value="3" {% if form_data.rating == '3' %}selected{% endif %}>★★★☆☆ (3 - Нормально)</option>
+                    <option value="2" {% if form_data.rating == '2' %}selected{% endif %}>★★☆☆☆ (2 - Плохо)</option>
+                    <option value="1" {% if form_data.rating == '1' %}selected{% endif %}>★☆☆☆☆ (1 - Ужасно)</option>
+                </select>
+                {% if errors.rating %}
+                    <div class="text-danger small mt-1">{{ errors.rating }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Текст отзыва *</label>
+                <textarea name="text" class="form-control" rows="4" 
+                          required minlength="10" maxlength="1000">{{ form_data.text|default:'' }}</textarea>
+                {% if errors.text %}
+                    <div class="text-danger small mt-1">{{ errors.text }}</div>
+                {% endif %}
+                <small class="text-muted">От 10 до 1000 символов</small>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">📝 Отправить отзыв</button>
+        </form>
+        <p class="text-muted mt-3">* Поля обязательны для заполнения</p>
+    </div>
+</div>
+{% endblock %}

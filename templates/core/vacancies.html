@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+{% block title %}Вакансии{% endblock %}
+{% block content %}
+<h2>💼 Актуальные вакансии</h2>
+
+{% if vacancies %}
+    <div class="row mt-4">
+        {% for vacancy in vacancies %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4>{{ vacancy.title }}</h4>
+                </div>
+                <div class="card-body">
+                    {% if vacancy.salary %}
+                        <p><strong>💰 Зарплата:</strong> {{ vacancy.salary }}</p>
+                    {% endif %}
+                    <p><strong>📝 Описание:</strong></p>
+                    <p>{{ vacancy.description|linebreaks }}</p>
+                    {% if vacancy.requirements %}
+                        <p><strong>📋 Требования:</strong></p>
+                        <p>{{ vacancy.requirements|linebreaks }}</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-muted">
+                    Добавлено: {{ vacancy.created_at|date:"d/m/Y" }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">Активных вакансий нет. Загляните позже!</div>
+{% endif %}
+{% endblock %}

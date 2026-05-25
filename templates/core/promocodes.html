@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+{% block title %}Промокоды и купоны{% endblock %}
+{% block content %}
+<h2>🏷️ Промокоды и купоны</h2>
+
+<h3 class="mt-4 text-success">🔥 Действующие промокоды</h3>
+{% if active_promocodes %}
+    <div class="row mt-3">
+        {% for promo in active_promocodes %}
+        <div class="col-md-4 mb-3">
+            <div class="card border-success">
+                <div class="card-body text-center">
+                    <h4 class="text-success">{{ promo.code }}</h4>
+                    <p class="display-6">{{ promo.discount }}%</p>
+                    <p>{{ promo.description|default:"Скидка на все услуги" }}</p>
+                    <small class="text-muted">
+                        Действует до: {{ promo.valid_to|date:"d/m/Y" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">Нет действующих промокодов</div>
+{% endif %}
+
+<h3 class="mt-4 text-secondary">📦 Архив промокодов</h3>
+{% if archived_promocodes %}
+    <div class="table-responsive mt-3">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Код</th>
+                    <th>Скидка</th>
+                    <th>Описание</th>
+                    <th>Действовал до</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for promo in archived_promocodes %}
+                <tr>
+                    <td>{{ promo.code }}</td>
+                    <td>{{ promo.discount }}%</td>
+                    <td>{{ promo.description|default:"—" }}</td>
+                    <td>{{ promo.valid_to|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-secondary">Архив пуст</div>
+{% endif %}
+{% endblock %}

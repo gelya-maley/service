@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<h2>📊 Статистика сервисного центра</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5>Динамика заказов по месяцам</h5>
+            </div>
+            <div class="card-body text-center">
+                <img src="data:image/png;base64,{{ chart_base64 }}" alt="График заказов по месяцам" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5>📈 Статистические показатели</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Всего заказов:</th>
+                        <td>{{ total_orders }}</td>
+                    </tr>
+                    <tr>
+                        <th>Средняя стоимость заказа:</th>
+                        <td>{{ avg_cost }} руб.</td>
+                    </tr>
+                    <tr>
+                        <th>Медиана стоимости заказа:</th>
+                        <td>{{ median_cost }} руб.</td>
+                    </tr>
+                    <tr>
+                        <th>Самая популярная услуга:</th>
+                        <td>{{ popular_service }}</td>
+                    </tr>
+                    <tr>
+                        <th>Наиболее прибыльная услуга:</th>
+                        <td>{{ most_profitable_name }} ({{ most_profitable_revenue }} руб.)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5>📋 Услуги (в алфавитном порядке)</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for service in services_alpha %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ service.name }}
+                        <span class="badge bg-primary rounded-pill">{{ service.price }} руб.</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">Нет услуг</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h5>📅 Дополнительная информация</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Текущая дата и время:</strong> {% now "d/m/Y H:i:s" %}</p>
+                <p><strong>Таймзона:</strong> Europe/Minsk (UTC+3)</p>
+                <p><strong>Дата формирования отчета:</strong> {% now "d/m/Y" %}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

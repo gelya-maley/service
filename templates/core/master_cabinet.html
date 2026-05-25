@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+{% block title %}Кабинет мастера{% endblock %}
+{% block content %}
+<h2>📋 Заказы, назначенные мне</h2>
+{% for order in orders %}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h5>Заказ #{{ order.id }} - {{ order.client.full_name }}</h5>
+            <span class="badge bg-info">{{ order.get_status_display }}</span>
+        </div>
+        <p>Устройство: {{ order.device|default:"Не указано" }}</p>
+        <p>Проблема: {{ order.client_problem|truncatechars:80 }}</p>
+        <p>Сумма: {{ order.total_cost|floatformat:2 }} руб.</p>
+        <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-warning">Выполнить</a>
+    </div>
+</div>
+{% empty %}
+<p>Нет назначенных заказов</p>
+{% endfor %}
+{% endblock %}

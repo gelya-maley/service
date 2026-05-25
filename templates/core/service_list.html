@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+{% block title %}Услуги{% endblock %}
+{% block content %}
+<h2 class="mb-4">🛠️ Наши услуги</h2>
+
+<!-- Форма фильтрации -->
+<div class="card mb-4">
+    <div class="card-header bg-secondary text-white">
+        <h5>🔍 Фильтрация и сортировка</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Категория</label>
+                <select name="category" class="form-select">
+                    <option value="">Все категории</option>
+                    {% for type in service_types %}
+                        <option value="{{ type.id }}" {% if selected_category == type.id|stringformat:"s" %}selected{% endif %}>
+                            {{ type.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Цена от</label>
+                <input type="number" name="min_price" class="form-control" value="{{ min_price }}" placeholder="0">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Цена до</label>
+                <input type="number" name="max_price" class="form-control" value="{{ max_price }}" placeholder="1000">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Сортировка</label>
+                <select name="sort" class="form-select">
+                    <option value="name" {% if sort_by == 'name' %}selected{% endif %}>По названию (А-Я)</option>
+                    <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>По цене (возрастание)</option>
+                    <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>По цене (убывание)</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">🔍 Применить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Список услуг -->
+<div class="row">
+    {% for service in services %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if service.image %}
+                <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.name }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-light text-center py-5">
+                    <span style="font-size: 48px;">🛠️</span>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <span class="badge bg-info mb-2">{{ service.service_type.name }}</span>
+                <h5 class="card-title">{{ service.name }}</h5>
+                <p class="card-text text-primary h4">{{ service.price }} руб.</p>
+                <p class="card-text"><small class="text-muted">за {{ service.unit }}</small></p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{% url 'service_detail' service.id %}" class="btn btn-outline-primary w-100">Подробнее →</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">Нет услуг, соответствующих фильтрам</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

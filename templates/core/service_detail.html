@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ service.name }}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h3>{{ service.name }}</h3>
+    </div>
+    <div class="card-body">
+        <p><strong>Категория:</strong> {{ service.service_type.name }}</p>
+        <p><strong>Цена:</strong> {{ service.price }} руб. / {{ service.unit }}</p>
+        <p><strong>Описание:</strong> Профессиональная услуга с гарантией качества.</p>
+        {% if service.image %}
+            <img src="{{ service.image.url }}" class="img-fluid mt-3" alt="{{ service.name }}" style="max-height: 300px;">
+        {% endif %}
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'service_list' %}" class="btn btn-secondary">← Назад к услугам</a>
+        <button class="btn btn-success" onclick="alert('Для заказа войдите в личный кабинет')">Заказать</button>
+    </div>
+</div>
+{% endblock %}
